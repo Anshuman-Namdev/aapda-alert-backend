@@ -52,7 +52,7 @@ async function syncReportsWithServer() {
         const pending = request.result.filter(r => !r.synced);
         for (const report of pending) {
             try {
-                const response = await fetch('/api/reports/submit', {
+                const response = await fetch('/reports', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(report)
