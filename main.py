@@ -52,7 +52,7 @@ def init():
     name TEXT, district TEXT, state TEXT,
     computed_at TEXT
 )""")
-       c.commit(); c.close()
+    c.commit(); c.close()
 init()
 
 def km(lat1, lon1, lat2, lon2):
