@@ -97,7 +97,7 @@ async function fetchRiskForCoords(lat, lon, displayName) {
         $('#riskLevel').textContent = '-';
         $('.confidence').textContent = '';
 
-        const response = await fetch(` /risk?lat=${lat}&lon=${lon}`);
+        const response = await fetch(` /api/risk?lat=${lat}&lon=${lon}`);
         if (!response.ok) {
             const errData = await response.json();
             throw new Error(errData.detail || "Server error");
@@ -196,7 +196,7 @@ $('#btnEvacuate').addEventListener('click', async () => {
     showToast("Finding nearest high-ground shelter...");
 
     try {
-        const res = await fetch(` /shelters?lat=${currentPos.lat}&lon=${currentPos.lng}&radius_km=25`);
+        const res = await fetch(` /api/shelters?lat=${currentPos.lat}&lon=${currentPos.lng}&radius_km=25`);
         const shelters = await res.json();
 
         if (shelters && shelters.length > 0) {
@@ -285,7 +285,7 @@ function displayCaseDetails(item) {
     $('#btnAssign').addEventListener('click', () => showToast(`Emergency Rescue team dispatched to Case #${item.id}!`));
     $('#btnResolve').addEventListener('click', async () => {
         try {
-            const res = await fetch(` /sos/${item.id}/status?status=resolved`, {
+            const res = await fetch(` /api/sos/${item.id}/status?status=resolved`, {
                 method: 'POST',
                 headers: { 'x-api-key': 'change-me' }
             });
