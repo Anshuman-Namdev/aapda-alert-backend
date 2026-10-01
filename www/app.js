@@ -97,7 +97,7 @@ async function fetchRiskForCoords(lat, lon, displayName) {
         $('#riskLevel').textContent = '-';
         $('.confidence').textContent = '';
 
-        const response = await fetch(`http://127.0.0.1:8000/risk?lat=${lat}&lon=${lon}`);
+        const response = await fetch(` /risk?lat=${lat}&lon=${lon}`);
         if (!response.ok) {
             const errData = await response.json();
             throw new Error(errData.detail || "Server error");
@@ -196,7 +196,7 @@ $('#btnEvacuate').addEventListener('click', async () => {
     showToast("Finding nearest high-ground shelter...");
 
     try {
-        const res = await fetch(`http://127.0.0.1:8000/shelters?lat=${currentPos.lat}&lon=${currentPos.lng}&radius_km=25`);
+        const res = await fetch(` /shelters?lat=${currentPos.lat}&lon=${currentPos.lng}&radius_km=25`);
         const shelters = await res.json();
 
         if (shelters && shelters.length > 0) {
@@ -219,7 +219,7 @@ async function loadRescueDashboard() {
     if (userRole !== 'volunteer') return;
 
     try {
-        const response = await fetch('http://127.0.0.1:8000/dashboard/sos', {
+        const response = await fetch(' /dashboard/sos', {
             headers: { 'x-api-key': 'change-me' }
         });
         
@@ -285,7 +285,7 @@ function displayCaseDetails(item) {
     $('#btnAssign').addEventListener('click', () => showToast(`Emergency Rescue team dispatched to Case #${item.id}!`));
     $('#btnResolve').addEventListener('click', async () => {
         try {
-            const res = await fetch(`http://127.0.0.1:8000/sos/${item.id}/status?status=resolved`, {
+            const res = await fetch(` /sos/${item.id}/status?status=resolved`, {
                 method: 'POST',
                 headers: { 'x-api-key': 'change-me' }
             });
@@ -425,7 +425,7 @@ $('#btnInstantSOS').addEventListener('click', async () => {
     }
 
     try {
-        const res = await fetch('http://127.0.0.1:8000/sos', {
+        const res = await fetch(' /sos', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(sosPayload)
@@ -469,7 +469,7 @@ $('#reportForm').addEventListener('submit', async (event) => {
     };
 
     try {
-        const response = await fetch('http://127.0.0.1:8000/reports', {
+        const response = await fetch(' /reports', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(reportData)
@@ -527,7 +527,7 @@ $('#sosForm').addEventListener('submit', async (event) => {
     };
 
     try {
-        const response = await fetch('http://127.0.0.1:8000/sos', {
+        const response = await fetch(' /sos', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(sosData)
