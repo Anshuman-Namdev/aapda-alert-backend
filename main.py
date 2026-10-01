@@ -43,7 +43,6 @@ def init():
         c.execute("DELETE FROM flood_events")
         c.executemany("INSERT INTO flood_events VALUES (?,?,?,?)",
                       [(float(r["lat"]), float(r["lon"]), r["date"], r["source"]) for r in csv.DictReader(open("flood_events.csv"))])
-    
     # Inside the init() function in main.py
     c.execute("""CREATE TABLE IF NOT EXISTS active_alerts (
     id INTEGER PRIMARY KEY,
@@ -53,6 +52,7 @@ def init():
     computed_at TEXT
 )""")
     c.commit(); c.close()
+
 init()
 
 def km(lat1, lon1, lat2, lon2):
@@ -385,15 +385,16 @@ async def native_proactive_scanner():
             conn.commit()
 
             for zone in PROACTIVE_ZONES:
-                await asyncio.sleep(2) # Prevent hitting API rate limits
+                await asyncio.sleep(5) # Prevent hitting API rate limits
                 try:
-                    risk_data = compute_risk(zone["lat"], zone["lon"])
+                    risk_data = await asyncio.to_thread(get_base, zone["lat"], zone["lon"])  # uses the 60-min cache
                     if risk_data and risk_data.get("level", 0) >= 2: # High (2) or Critical (3)
                         print(f"  [!] High-risk zone detected: {zone['name']}")
                         c.execute("""INSERT INTO active_alerts (lat, lon, level, score, name, district, state, computed_at)
                                      VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
                                   (zone["lat"], zone["lon"], risk_data["level"], risk_data["score"],
                                    zone["name"], zone.get("district", ""), zone.get("state", ""), risk_data["computed_at"]))
+                        conn.commit()  # release the write lock so get_base() can cache
                 except Exception as e:
                     print(f"  [!] Error scanning zone {zone['name']}: {e}")
             conn.commit()
@@ -423,8 +424,8 @@ def get_active_alerts():
         return rows
     finally:
         conn.close()
-        
 
 
-
-
+# --- Serve the web app (keep this LAST so it never shadows the API routes) ---
+from fastapi.staticfiles import StaticFiles
+app.mount("/", StaticFiles(directory=os.path.join(os.path.dirname(os.path.abspath(__file__)), "www"), html=True), name="www")
