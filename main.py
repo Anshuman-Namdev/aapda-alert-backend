@@ -285,17 +285,17 @@ class SosIn(BaseModel):
     created_at: float | None = None
 
 # ---------------------------------------------------------------- API
-@app.get("/health")
+@app.get("/api/health")
 def health(): return {"ok": True}
 
-@app.get("/risk")
+@app.get("/api/risk")
 def risk(lat: float, lon: float, demo_flood: bool = False):
     check_india(lat, lon)
     base = get_base(lat, lon, demo_flood=demo_flood)
     if not base: raise HTTPException(503, "Data sources unavailable and nothing cached for this area")
     return with_reports(base, lat, lon)
 
-@app.post("/reports")
+@app.post("/api/reports")
 def add_report(r: ReportIn):
     check_india(r.lat, r.lon)
     rid, c = uuid.uuid4().hex[:12], db()
@@ -308,17 +308,17 @@ def add_report(r: ReportIn):
         rid = c.execute("SELECT id FROM reports WHERE client_id=?", (r.client_id,)).fetchone()["id"]
     c.close(); return {"id": rid}
 
-@app.get("/reports")
+@app.get("/api/reports")
 def list_reports(hours: int = 6):
     return [{k: r[k] for k in ("id", "kind", "lat", "lon", "note", "has_photo", "created", "score", "confirmed")}
             for r in recent_reports(hours)]
 
-@app.post("/reports/{rid}/confirm")
+@app.post("/api/reports/{rid}/confirm")
 def confirm(rid: str, x_api_key: str = Header(default="")):
     need_key(x_api_key); c = db()
     c.execute("UPDATE reports SET confirmed=1 WHERE id=?", (rid,)); c.commit(); c.close(); return {"ok": True}
 
-@app.post("/sos")
+@app.post("/api/sos")
 def add_sos(s: SosIn):
     check_india(s.lat, s.lon)
     sid, c = uuid.uuid4().hex[:12], db()
@@ -330,7 +330,7 @@ def add_sos(s: SosIn):
         sid = c.execute("SELECT id FROM sos WHERE client_id=?", (s.client_id,)).fetchone()["id"]
     c.close(); return {"id": sid, "message": "Received. If life is in danger, also call 112."}
 
-@app.get("/dashboard/sos")
+@app.get("/api/dashboard/sos")
 def dashboard_sos(x_api_key: str = Header(default="")):
     """Open SOS cases, most urgent first: risk level at the spot + waiting time + people + nearby verified reports."""
     need_key(x_api_key)
@@ -345,13 +345,13 @@ def dashboard_sos(x_api_key: str = Header(default="")):
         s["waiting_min"] = round(wait_min)
     return sorted(cases, key=lambda s: s["priority"], reverse=True)
 
-@app.post("/sos/{sid}/status")
+@app.post("/api/sos/{sid}/status")
 def sos_status(sid: str, status: str, x_api_key: str = Header(default="")):
     need_key(x_api_key)
     if status not in ("open", "assigned", "resolved"): raise HTTPException(400, "status must be open, assigned or resolved")
     c = db(); c.execute("UPDATE sos SET status=? WHERE id=?", (status, sid)); c.commit(); c.close(); return {"ok": True}
 
-@app.get("/shelters")
+@app.get("/api/shelters")
 def shelters(lat: float, lon: float, radius_km: int = 15):
     """Hospitals, clinics and shelters near a point, from OpenStreetMap (Overpass). Data is only as complete as OSM."""
     check_india(lat, lon)
@@ -417,7 +417,7 @@ async def native_proactive_scanner():
 @app.on_event("startup")
 async def start_background_workers():
     asyncio.create_task(native_proactive_scanner())
-@app.get("/alerts")
+@app.get("/api/alerts")
 def get_active_alerts():
     conn = db()
     try:
