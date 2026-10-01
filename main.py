@@ -8,6 +8,7 @@ import csv, json, math, os, sqlite3, time, uuid
 from datetime import datetime, timezone
 import requests
 from fastapi import FastAPI, Header, HTTPException
+from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 DB_FILE = "resqwave.db" 
@@ -18,6 +19,8 @@ CACHE_MIN = 60                                             # reuse a cell's risk
 
 app = FastAPI(title="ResQWave API")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])  # tighten before launch
+
+app.mount("/", StaticFiles(directory="www", html=True), name="static")
 
 # ---------------------------------------------------------------- database
 import sqlite3
