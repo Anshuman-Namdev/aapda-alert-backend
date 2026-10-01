@@ -43,7 +43,7 @@ def init():
         c.execute("DELETE FROM flood_events")
         c.executemany("INSERT INTO flood_events VALUES (?,?,?,?)",
                       [(float(r["lat"]), float(r["lon"]), r["date"], r["source"]) for r in csv.DictReader(open("flood_events.csv"))])
-    c.commit(); c.close()
+    
     # Inside the init() function in main.py
     c.execute("""CREATE TABLE IF NOT EXISTS active_alerts (
     id INTEGER PRIMARY KEY,
@@ -52,7 +52,7 @@ def init():
     name TEXT, district TEXT, state TEXT,
     computed_at TEXT
 )""")
-
+       c.commit(); c.close()
 init()
 
 def km(lat1, lon1, lat2, lon2):
