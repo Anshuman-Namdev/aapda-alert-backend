@@ -19,3 +19,156 @@ main { max-width:1280px; margin:auto; padding:0 44px 64px; }.view { display:none
 dialog { width:min(480px,calc(100vw - 32px));border:0;border-radius:14px;padding:0;box-shadow:0 20px 60px #001a1d55; }.close-dialog{position:absolute;right:13px;top:9px;border:0;background:transparent;color:var(--muted);font-size:26px}.close-dialog:hover{color:var(--ink)}dialog::backdrop{background:#001f22aa}dialog form{padding:34px 30px 30px}dialog h2{font:600 32px/1.1 "Playfair Display",Georgia,serif;margin:0 0 21px}dialog label{display:grid;gap:6px;margin-top:14px;color:var(--ink);font-weight:600;font-size:13px}dialog select,dialog input,dialog textarea{border:1px solid #bfd5d1;border-radius:6px;padding:10px;background:#fff;font-size:14px}.consent{display:flex;align-items:center;gap:9px;font-weight:400;margin:18px 0!important}.consent input{width:15px;height:15px}.dialog-intro{color:var(--muted);font-size:13px;line-height:1.45;margin:-8px 0 15px}.emergency-eyebrow{color:var(--red)}.toast{position:fixed;right:24px;bottom:24px;transform:translateY(120px);opacity:0;background:var(--deep);color:#fff;border-radius:8px;padding:13px 17px;box-shadow:0 12px 30px #062f3444;transition:.28s ease;z-index:10;font-size:14px}.toast.show{transform:translateY(0);opacity:1}
 @media (max-width:800px){.topbar,main{padding-left:20px;padding-right:20px}.topbar{height:68px}.topbar nav{display:none}.hero{margin:0 -20px;padding:48px 20px 23px;grid-template-columns:1fr;min-height:610px}.hero-art{margin:0 -20px;min-height:275px}.mountain-back{height:220px;width:360px}.mountain-front{height:170px;width:290px;right:90px}.risk-layout,.desk-layout{grid-template-columns:1fr}.action-grid,.report-list{grid-template-columns:1fr}.operations-summary{gap:13px}.dashboard-head{align-items:start;flex-direction:column}.terrain-map{min-height:390px}.case-panel{padding:18px}.section-heading h2{font-size:30px}.top-actions .language{display:none}.emergency-top{padding:9px 11px;font-size:12px}.location-selector{align-items:stretch;flex-direction:column}.location-selector select{width:100%}.hero h1{font-size:52px}.report-row{padding:15px}.reports-section{margin-top:51px}.dashboard-head h1{font-size:39px}}
 @media (max-width:430px){.brand{font-size:18px}.topbar{padding:0 16px}.top-actions{margin-left:auto}.hero{margin:0 -20px}.risk-card,.action-card{padding:22px}.risk-card-top{gap:14px}.confidence{white-space:nowrap}.operations-summary strong{font-size:33px}.operations-summary small{line-height:1.25}.case-detail>div{flex-wrap:wrap}}
+/* ========================================================================= */
+/* LOGIN & REGISTRATION STYLES                                               */
+/* ========================================================================= */
+.auth-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--cream);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  transition: opacity 0.3s ease;
+}
+
+.auth-card {
+  background: #fffaf1;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  width: 90%;
+  max-width: 420px;
+  padding: 28px 30px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 24px;
+  position: relative;
+}
+
+.auth-header .brand-mark {
+  margin: 0 auto 12px;
+}
+
+.auth-header h2 {
+  font: 700 28px/1.1 "Playfair Display", Georgia, serif;
+  letter-spacing: -.8px;
+  margin: 0 0 8px;
+  color: var(--deep);
+}
+
+.auth-header p {
+  color: var(--muted);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.auth-step {
+  display: none;
+}
+
+.auth-step.active {
+  display: block;
+}
+
+/* Role Selection Buttons */
+.role-buttons {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-top: 20px;
+}
+.role-button {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.role-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+  border-color: var(--teal);
+}
+.role-button .icon {
+  font-size: 24px;
+  margin-right: 16px;
+}
+.role-button span {
+  line-height: 1.3;
+  color: var(--muted);
+}
+.role-button strong {
+  font-size: 16px;
+  color: var(--deep);
+  font-weight: 700;
+}
+
+/* Form Styles */
+#citizen-details-form .field-label,
+#citizen-otp-form .field-label,
+#volunteer-login-form .field-label {
+  display: block;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 600;
+  margin: 16px 0 6px;
+}
+input[type="text"], input[type="number"], input[type="tel"], input[type="password"] {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--sand);
+  border-radius: 7px;
+  background: #fff;
+  font-size: 15px;
+}
+.auth-error {
+    color: var(--red);
+    font-size: 13px;
+    text-align: center;
+    margin-top: 12px;
+    height: 16px;
+}
+.back-button {
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: transparent;
+    border: none;
+    font-size: 24px;
+    color: var(--muted);
+    cursor: pointer;
+}
+
+/* Terms and Conditions */
+.terms-box {
+    max-height: 200px;
+    overflow-y: auto;
+    background: var(--cream);
+    border: 1px solid var(--sand);
+    padding: 15px;
+    border-radius: 7px;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.5;
+}
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 20px 0;
+    font-size: 14px;
+    cursor: pointer;
+}
+.checkbox-label input {
+    width: 18px;
+    height: 18px;
+}
