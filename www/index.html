@@ -21,7 +21,104 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <!-- Welcome Role Selection Dialog (First-time Login) -->
+    <!-- ========================================================================= -->
+<!-- LOGIN & REGISTRATION OVERLAY                                            -->
+<!-- ========================================================================= -->
+<div id="authOverlay" class="auth-overlay">
+    <div class="auth-card">
+
+        <!-- ===== Initial Role Selection ===== -->
+        <div id="role-selection-step" class="auth-step active">
+            <div class="auth-header">
+                <span class="brand-mark" aria-hidden="true">R</span>
+                <h2>Welcome to ResQWave</h2>
+                <p>Please select your profile to begin.</p>
+            </div>
+            <div class="role-buttons">
+                <button class="role-button citizen" onclick="showAuthStep('citizen-details-step')">
+                    <span class="icon">👤</span>
+                    <span>Continue as a <br><strong>Citizen</strong></span>
+                </button>
+                <button class="role-button volunteer" onclick="showAuthStep('volunteer-login-step')">
+                    <span class="icon">🦺</span>
+                    <span>Log in as a <br><strong>Rescue Volunteer</strong></span>
+                </button>
+            </div>
+        </div>
+
+        <!-- ===== Citizen Step 1: Details ===== -->
+        <div id="citizen-details-step" class="auth-step">
+            <div class="auth-header">
+                <button class="back-button" onclick="showAuthStep('role-selection-step')">← Back</button>
+                <h2>Citizen Registration</h2>
+                <p>Please provide your details to continue.</p>
+            </div>
+            <form id="citizen-details-form" onsubmit="handleCitizenDetails(event)">
+                <div class="field-label">Full Name</div>
+                <input type="text" id="citizen-name" placeholder="e.g. Anshuman Namdev" required>
+                <div class="field-label">Age</div>
+                <input type="number" id="citizen-age" placeholder="e.g. 21" required>
+                <div class="field-label">Mobile Number</div>
+                <input type="tel" id="citizen-mobile" placeholder="e.g. 9876543210" pattern="[6-9][0-9]{9}" required>
+                <button type="submit" class="primary-button full">Send OTP</button>
+            </form>
+        </div>
+        
+        <!-- ===== Citizen Step 2: OTP Verification ===== -->
+        <div id="citizen-otp-step" class="auth-step">
+            <div class="auth-header">
+                <button class="back-button" onclick="showAuthStep('citizen-details-step')">← Back</button>
+                <h2>Verify Your Number</h2>
+                <p>Enter the 5-digit OTP sent to <strong id="otp-phone-display"></strong>.</p>
+            </div>
+            <form id="citizen-otp-form" onsubmit="handleOtpVerification(event)">
+                <div class="field-label">Enter OTP</div>
+                <input type="text" id="citizen-otp" placeholder="_ _ _ _ _" maxlength="5" required>
+                <p id="otp-error" class="auth-error"></p>
+                <button type="submit" class="primary-button full">Verify & Continue</button>
+            </form>
+        </div>
+
+        <!-- ===== Citizen Step 3: Terms & Conditions ===== -->
+        <div id="terms-conditions-step" class="auth-step">
+            <div class="auth-header">
+                <h2>Terms & Conditions</h2>
+                <p>Please review and accept the terms to complete your registration.</p>
+            </div>
+            <div class="terms-box">
+                <p><strong>Data Privacy & Usage:</strong> By using ResQWave, you consent to the collection of your name, age, and mobile number. This information will be stored securely in a private MySQL database. Your location data may be used during an active SOS report to assist rescue operations.</p>
+                <p><strong>Disclaimer:</strong> The flood risk information provided is for awareness and preparedness only. It should not be considered a substitute for official evacuation orders from government agencies.</p>
+                <p><strong>User Conduct:</strong> Misuse of the SOS feature or submission of false reports is strictly prohibited and may result in a permanent ban from the service.</p>
+            </div>
+            <form id="terms-form" onsubmit="handleTermsAcceptance(event)">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="terms-checkbox" required>
+                    I have read and agree to the Terms & Conditions.
+                </label>
+                <button type="submit" class="primary-button full">Finish Registration</button>
+            </form>
+        </div>
+        
+        <!-- ===== Volunteer Login ===== -->
+        <div id="volunteer-login-step" class="auth-step">
+             <div class="auth-header">
+                <button class="back-button" onclick="showAuthStep('role-selection-step')">← Back</button>
+                <h2>Volunteer Login</h2>
+                <p>Enter your official credentials.</p>
+            </div>
+            <form id="volunteer-login-form" onsubmit="handleVolunteerLogin(event)">
+                <div class="field-label">Username</div>
+                <input type="text" id="volunteer-username" placeholder="Enter username" required>
+                <div class="field-label">Password</div>
+                <input type="password" id="volunteer-password" placeholder="••••••••••" required>
+                <p id="volunteer-error" class="auth-error"></p>
+                <button type="submit" class="primary-button full">Login</button>
+            </form>
+        </div>
+
+    </div>
+</div>
+<!-- login end -->
 
     <div class="site-shell">
       <header class="topbar">
