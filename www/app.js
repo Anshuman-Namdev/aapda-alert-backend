@@ -5,17 +5,6 @@ window.addEventListener('DOMContentLoaded', () => {
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => document.querySelectorAll(selector);
 
-// --- Global Variables ---
-let map;
-let marker;
-let userRole = 'citizen';
-let routingControl;
-
-// =========================================================================
-// 1. APP INITIALIZATION & ROLE SELECTOR (WITH MEMORY)
-// =========================================================================
-
-
 function setupUIForRole() {
     if (userRole === 'volunteer') {
         $('#navRescueDesk').style.display = 'block';
@@ -26,6 +15,15 @@ function setupUIForRole() {
     }
 }
 
+// --- Global Variables ---
+let map;
+let marker;
+let userRole = 'citizen';
+let routingControl;
+
+// =========================================================================
+// 1. APP INITIALIZATION & ROLE SELECTOR (WITH MEMORY)
+// =========================================================================
 
 function initMap() {
     if (map) return;
