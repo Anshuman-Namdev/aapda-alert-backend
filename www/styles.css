@@ -44,9 +44,15 @@ dialog { width:min(480px,calc(100vw - 32px));border:0;border-radius:14px;padding
 }
 
 .auth-header {
+  display: flex;
+  flex-direction: column; /* Stacks the title and subtitle vertically */
+  align-items: center;   /* Centers them horizontally */
+  justify-content: center; /* Centers them vertically */
   text-align: center;
   margin-bottom: 24px;
-  position: relative;
+  position: relative;      /* Keeps the back button positioned correctly relative to this box */
+}
+
 }
 
 .auth-header .brand-mark {
