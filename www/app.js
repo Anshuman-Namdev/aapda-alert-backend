@@ -10,46 +10,7 @@ let routingControl;
 // =========================================================================
 // 1. APP INITIALIZATION & ROLE SELECTOR (WITH MEMORY)
 // =========================================================================
-window.addEventListener('DOMContentLoaded', () => {
-    initMap();
-    // Check if a role is already stored in the session memory
-    const savedRole = sessionStorage.getItem('resqwave_user_role');
-    
-    if (savedRole) {
-        // If we remember the user, set their role and skip the dialog
-        userRole = savedRole;
-        setupUIForRole();
-        showToast(`Welcome back! Logged in as ${savedRole}.`);
-    } else {
-        // If we don't remember them, show the "login" dialog
-        const roleDialog = $('#roleDialog');
-        if (roleDialog) {
-            try {
-                roleDialog.showModal();
-            } catch(e) {
-                console.warn("Role dialog could not be shown:", e.message);
-            }
-        }
-    }
-});
 
-$('#selectCitizen').addEventListener('click', () => {
-    userRole = 'citizen';
-    // Save the choice to session memory
-    sessionStorage.setItem('resqwave_user_role', userRole);
-    setupUIForRole();
-    $('#roleDialog').close();
-    showToast("Logged in as Citizen. Stay safe! 👤");
-});
-
-$('#selectVolunteer').addEventListener('click', () => {
-    userRole = 'volunteer';
-    // Save the choice to session memory
-    sessionStorage.setItem('resqwave_user_role', userRole);
-    setupUIForRole();
-    $('#roleDialog').close();
-    showToast("Logged in as Rescue Volunteer. Stay alert! 🦺");
-});
 
 function setupUIForRole() {
     if (userRole === 'volunteer') {
@@ -62,9 +23,6 @@ function setupUIForRole() {
 }
 
 
-// =========================================================================
-// 2. INTERACTIVE MAP & ON-DEMAND RISK
-// =========================================================================
 function initMap() {
     if (map) return;
 
