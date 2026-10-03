@@ -25,7 +25,7 @@ function showToast(message) {
 
 function setView(view) {
   $$('.view').forEach((section) => {
-    if (section) section.style.display = (section.id === `${view}View`) ? 'block' : 'none';
+        if (section) section.style.display = (section.id === `${view}View`) ? 'block' : 'none';
   });
   $$('.nav-link').forEach((button) => {
     if (button.dataset.view) button.classList.toggle('active', button.dataset.view === view);
@@ -408,14 +408,22 @@ window.addEventListener('DOMContentLoaded', () => {
     if (authOverlay) authOverlay.style.display = 'flex';
   }
 
-  // Logout listener
+   // Logout listener with native confirmation prompt
   const logoutButton = document.getElementById('logoutButton');
   if (logoutButton) {
     logoutButton.addEventListener('click', () => {
-      localStorage.removeItem('resqwave_user');
-      window.location.reload();
+      const confirmLogout = confirm("🚨 Are you sure you want to log out of ResQWave? You will need to sign in or register again to access your profile.");
+      if (confirmLogout) {
+        showToast("Logging you out safely... 📴");
+        localStorage.removeItem('resqwave_user');
+        // Small delay so the user can see the toast message before the page reloads
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      }
     });
   }
+
 
   // Navigation tab switcher
   $$('.nav-link').forEach((button) => {
