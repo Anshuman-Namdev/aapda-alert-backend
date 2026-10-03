@@ -515,3 +515,113 @@ $('#refreshDesk').addEventListener('click', () => {
     showToast('Refreshing live active cases...');
     loadRescueDashboard();
 });
+// =========================================================================
+// AUTHENTICATION FLOW LOGIC
+// =========================================================================
+
+const authOverlay = document.getElementById('authOverlay');
+const authSteps = document.querySelectorAll('.auth-step');
+let generatedOtp = '';
+
+// Function to switch between login steps
+function showAuthStep(stepId) {
+    authSteps.forEach(step => {
+        step.classList.toggle('active', step.id === stepId);
+    });
+}
+
+// === CITIZEN REGISTRATION FLOW ===
+
+function handleCitizenDetails(event) {
+    event.preventDefault();
+    const phone = document.getElementById('citizen-mobile').value;
+    
+    // --- IMPORTANT: OTP SMS Integration ---
+    // In a real app, you would call your backend here to send an SMS.
+    // For this hackathon, we will simulate it.
+    generatedOtp = String(Math.floor(10000 + Math.random() * 90000));
+    alert(`(DEMO) Your OTP is: ${generatedOtp}`); // Show OTP in an alert for demo purposes
+    
+    document.getElementById('otp-phone-display').textContent = phone;
+    showAuthStep('citizen-otp-step');
+}
+
+function handleOtpVerification(event) {
+    event.preventDefault();
+    const enteredOtp = document.getElementById('citizen-otp').value;
+    const errorElem = document.getElementById('otp-error');
+    
+    if (enteredOtp === generatedOtp) {
+        errorElem.textContent = '';
+        showAuthStep('terms-conditions-step');
+    } else {
+        errorElem.textContent = 'Invalid OTP. Please try again.';
+    }
+}
+
+function handleTermsAcceptance(event) {
+    event.preventDefault();
+    // At this point, registration is complete.
+    // We create a "user profile" object and save it to the browser's memory.
+    const userProfile = {
+        name: document.getElementById('citizen-name').value,
+        mobile: document.getElementById('citizen-mobile').value,
+        role: 'citizen',
+        loggedIn: true
+    };
+    
+    localStorage.setItem('resqwave_user', JSON.stringify(userProfile));
+    
+    // Fade out the login overlay and show the main app
+    authOverlay.style.opacity = '0';
+    setTimeout(() => { authOverlay.style.display = 'none'; }, 300);
+    
+    // Configure the main app UI for a citizen
+    setupUIForRole('citizen');
+}
+
+// === VOLUNTEER LOGIN FLOW ===
+
+function handleVolunteerLogin(event) {
+    event.preventDefault();
+    const username = document.getElementById('volunteer-username').value;
+    const password = document.getElementById('volunteer-password').value;
+    const errorElem = document.getElementById('volunteer-error');
+    
+    // --- IMPORTANT: Password Check ---
+    // In a real app, you would send this to your backend to be verified against a database.
+    // For this hackathon, we will use a simple, hardcoded password.
+    if (username === 'volunteer' && password === 'sih2024') {
+        errorElem.textContent = '';
+        const userProfile = {
+            name: 'Rescue Volunteer',
+            role: 'volunteer',
+            loggedIn: true
+        };
+        localStorage.setItem('resqwave_user', JSON.stringify(userProfile));
+        authOverlay.style.opacity = '0';
+        setTimeout(() => { authOverlay.style.display = 'none'; }, 300);
+        setupUIForRole('volunteer');
+    } else {
+        errorElem.textContent = 'Invalid credentials.';
+    }
+}
+
+
+// === STARTUP CHECK ===
+// This replaces the simple initMap() listener we added earlier.
+window.addEventListener('DOMContentLoaded', () => {
+    initMap(); // Always start the map in the background
+    
+    const savedUser = localStorage.getItem('resqwave_user');
+    
+    if (savedUser) {
+        // If user is already logged in, hide the login screen immediately
+        const user = JSON.parse(savedUser);
+        authOverlay.style.display = 'none';
+        setupUIForRole(user.role);
+    } else {
+        // If no user is saved, show the login screen
+        authOverlay.style.display = 'flex';
+    }
+});
