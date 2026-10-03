@@ -364,7 +364,7 @@ function handleVolunteerLogin(event) {
   const errorElem = $('#volunteer-error');
 
   // Hardcoded volunteer credential check
-  if (username === 'volunteer' && password === 'sih2024') {
+  if (username === 'volunteer' && password === 'sih2026') {
     if (errorElem) errorElem.textContent = '';
     const userProfile = {
       name: 'Rescue Volunteer',
